@@ -1,7 +1,7 @@
 import base64
 import datetime
 from google.cloud import aiplatform as aip
-from flask import Flask, jsonify, request, send_file, render_template
+from flask import Flask, request, send_file, render_template
 from flask_cors import CORS
 from PIL import Image
 from io import BytesIO
@@ -23,9 +23,10 @@ def root():
 
 @app.route('/predict', methods=['POST'])
 def predict():
-  PROJECT_NAME = 'story-ai-2'
-  REGION = 'us-central1'
-  ENDPOINT_ID = '7379917647586000896'
+  PROJECT_ID="901223840475"
+  REGION="us-central1"
+  ENDPOINT_ID="5551174723896868864"
+  BUCKET_NAME="story-ai-bucket"
   
   # Get the input data from the HTTP request
   input_data = request.get_json()
@@ -33,7 +34,8 @@ def predict():
   # Extract the text parameter from the input data
   prompt = input_data.get('prompt', '')
 
-  aip.init(project=PROJECT_NAME, location=REGION)
+  aip.init(project=PROJECT_ID, location=REGION, staging_bucket=BUCKET_NAME)
+
   endpoint = aip.Endpoint(endpoint_name=ENDPOINT_ID)
   text_input = prompt
 
